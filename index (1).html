@@ -1,0 +1,799 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <title>Dossier Client Pro</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --primary: #0f1419;
+            --secondary: #1a2235;
+            --accent: #d4af37;
+            --success: #10b981;
+            --warning: #f59e0b;
+            --danger: #ef4444;
+            --bg-light: #f9fafb;
+            --text-dark: #111827;
+            --text-light: #6b7280;
+            --border: #e5e7eb;
+        }
+
+        html, body {
+            height: 100%;
+            width: 100%;
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+            background: var(--bg-light);
+            color: var(--text-dark);
+        }
+
+        .app {
+            display: grid;
+            grid-template-columns: 260px 1fr;
+            height: 100vh;
+            width: 100%;
+        }
+
+        /* SIDEBAR */
+        .sidebar {
+            background: linear-gradient(135deg, #0f1419 0%, #1a2235 100%);
+            color: white;
+            padding: 30px 20px;
+            border-right: 2px solid var(--accent);
+            overflow-y: auto;
+            position: relative;
+        }
+
+        .logo {
+            font-size: 20px;
+            font-weight: 700;
+            margin-bottom: 30px;
+            color: var(--accent);
+        }
+
+        .user-box {
+            background: rgba(255,255,255,0.08);
+            padding: 15px;
+            border-radius: 8px;
+            margin-bottom: 30px;
+            border-left: 3px solid var(--accent);
+        }
+
+        .user-role {
+            font-size: 10px;
+            color: var(--accent);
+            text-transform: uppercase;
+            margin-bottom: 5px;
+        }
+
+        .user-name {
+            font-size: 14px;
+            font-weight: 600;
+        }
+
+        .nav-list {
+            list-style: none;
+            margin-bottom: 30px;
+        }
+
+        .nav-item {
+            margin-bottom: 8px;
+        }
+
+        .nav-link {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            padding: 12px 15px;
+            color: #cbd5e1;
+            text-decoration: none;
+            border-radius: 6px;
+            border-left: 3px solid transparent;
+            cursor: pointer;
+            font-size: 14px;
+            font-weight: 500;
+            transition: all 0.3s;
+        }
+
+        .nav-link:hover {
+            background: rgba(212,175,55,0.1);
+            color: var(--accent);
+            border-left-color: var(--accent);
+        }
+
+        .nav-link.active {
+            background: rgba(212,175,55,0.15);
+            color: var(--accent);
+            border-left-color: var(--accent);
+        }
+
+        .divider {
+            height: 1px;
+            background: rgba(255,255,255,0.1);
+            margin: 20px 0;
+        }
+
+        .view-section {
+            margin-top: 30px;
+        }
+
+        .view-label {
+            font-size: 10px;
+            color: var(--accent);
+            text-transform: uppercase;
+            margin-bottom: 10px;
+            font-weight: 700;
+        }
+
+        .view-btn {
+            width: 100%;
+            padding: 9px;
+            margin-bottom: 7px;
+            background: rgba(255,255,255,0.08);
+            border: 1px solid rgba(212,175,55,0.2);
+            color: white;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 11px;
+            font-weight: 600;
+            transition: all 0.3s;
+            text-transform: uppercase;
+        }
+
+        .view-btn:hover {
+            background: rgba(212,175,55,0.15);
+        }
+
+        .view-btn.active {
+            background: var(--accent);
+            color: var(--primary);
+            border-color: var(--accent);
+        }
+
+        /* MAIN */
+        .main {
+            padding: 40px;
+            overflow-y: auto;
+            background: var(--bg-light);
+        }
+
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            margin-bottom: 40px;
+            padding-bottom: 20px;
+            border-bottom: 2px solid var(--border);
+        }
+
+        h1 {
+            font-size: 32px;
+            font-weight: 700;
+            color: var(--primary);
+            margin-bottom: 8px;
+        }
+
+        .subtitle {
+            font-size: 14px;
+            color: var(--text-light);
+        }
+
+        .btn {
+            padding: 12px 24px;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            font-weight: 600;
+            font-size: 14px;
+            transition: all 0.3s;
+        }
+
+        .btn-primary {
+            background: var(--accent);
+            color: var(--primary);
+            box-shadow: 0 4px 15px rgba(212,175,55,0.2);
+        }
+
+        .btn-primary:hover {
+            background: #e8c547;
+            transform: translateY(-2px);
+        }
+
+        /* CONTENT */
+        .content {
+            display: none;
+        }
+
+        .content.active {
+            display: block;
+            animation: fadeIn 0.3s;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+
+        .grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+            gap: 20px;
+            margin-bottom: 30px;
+        }
+
+        .card {
+            background: white;
+            border-radius: 8px;
+            padding: 24px;
+            border: 1px solid var(--border);
+            box-shadow: 0 1px 3px rgba(0,0,0,0.05);
+            transition: all 0.3s;
+        }
+
+        .card:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 10px 25px rgba(0,0,0,0.1);
+        }
+
+        .stat-card {
+            border-left: 4px solid var(--accent);
+        }
+
+        .stat-label {
+            font-size: 12px;
+            color: var(--text-light);
+            text-transform: uppercase;
+            margin-bottom: 8px;
+        }
+
+        .stat-value {
+            font-size: 32px;
+            font-weight: 700;
+            color: var(--primary);
+            margin-bottom: 8px;
+        }
+
+        .stat-change {
+            font-size: 12px;
+            color: var(--success);
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            background: white;
+            border-radius: 8px;
+            border: 1px solid var(--border);
+            overflow: hidden;
+        }
+
+        thead {
+            background: var(--bg-light);
+            border-bottom: 2px solid var(--border);
+        }
+
+        th {
+            padding: 16px;
+            text-align: left;
+            font-size: 12px;
+            font-weight: 700;
+            text-transform: uppercase;
+            color: var(--text-light);
+        }
+
+        td {
+            padding: 16px;
+            border-bottom: 1px solid var(--border);
+            font-size: 14px;
+        }
+
+        tbody tr:hover {
+            background: var(--bg-light);
+        }
+
+        .badge {
+            display: inline-block;
+            padding: 6px 12px;
+            border-radius: 20px;
+            font-size: 11px;
+            font-weight: 700;
+            text-transform: uppercase;
+        }
+
+        .badge-success {
+            background: rgba(16,185,129,0.1);
+            color: var(--success);
+        }
+
+        .badge-warning {
+            background: rgba(245,158,11,0.1);
+            color: var(--warning);
+        }
+
+        .badge-danger {
+            background: rgba(239,68,68,0.1);
+            color: var(--danger);
+        }
+
+        .section-title {
+            font-size: 16px;
+            font-weight: 700;
+            color: var(--primary);
+            margin-bottom: 20px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            border-bottom: 2px solid var(--accent);
+            padding-bottom: 10px;
+        }
+
+        @media (max-width: 1024px) {
+            .app {
+                grid-template-columns: 1fr;
+                height: auto;
+            }
+
+            .sidebar {
+                border-right: none;
+                border-bottom: 2px solid var(--accent);
+                display: flex;
+                justify-content: space-between;
+                align-items: center;
+                padding: 20px;
+                flex-wrap: wrap;
+            }
+
+            .nav-list {
+                display: flex;
+                gap: 10px;
+                margin-bottom: 0;
+                flex-wrap: wrap;
+            }
+
+            .nav-item {
+                margin-bottom: 0;
+            }
+
+            .divider {
+                display: none;
+            }
+
+            .view-section {
+                display: flex;
+                gap: 5px;
+                margin-top: 0;
+            }
+
+            .view-label {
+                display: none;
+            }
+
+            .main {
+                padding: 20px;
+            }
+
+            h1 {
+                font-size: 24px;
+            }
+
+            .grid {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="app">
+        <!-- SIDEBAR -->
+        <aside class="sidebar">
+            <div class="logo">⚖️ Dossier Pro</div>
+            <div class="user-box">
+                <div class="user-role" id="roleDisplay">Admin</div>
+                <div class="user-name" id="nameDisplay">Cabinet Juridique</div>
+            </div>
+
+            <nav class="nav-list">
+                <li class="nav-item">
+                    <a class="nav-link active" data-section="dashboard">📊 Dashboard</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" data-section="dossiers">📁 Dossiers</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" data-section="taches">✅ Tâches</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" data-section="facturation">💰 Facturation</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" data-section="clients">👥 Clients</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" data-section="param">⚙️ Paramètres</a>
+                </li>
+            </nav>
+
+            <div class="divider"></div>
+
+            <div class="view-section">
+                <div class="view-label">Mode Démo</div>
+                <button class="view-btn active" data-view="sarah">Avocat</button>
+                <button class="view-btn" data-view="secretary">Secrétaire</button>
+                <button class="view-btn" data-view="client">Client</button>
+            </div>
+        </aside>
+
+        <!-- MAIN -->
+        <main class="main">
+            <!-- DASHBOARD -->
+            <section class="content active" id="dashboard">
+                <div class="header">
+                    <div>
+                        <h1>Dashboard</h1>
+                        <p class="subtitle">Vue d'ensemble de votre cabinet</p>
+                    </div>
+                </div>
+
+                <div class="grid">
+                    <div class="card stat-card">
+                        <div class="stat-label">Dossiers Actifs</div>
+                        <div class="stat-value">12</div>
+                        <div class="stat-change">↑ 3 cette semaine</div>
+                    </div>
+                    <div class="card stat-card">
+                        <div class="stat-label">Honoraires Générés</div>
+                        <div class="stat-value">45,200€</div>
+                        <div class="stat-change">↑ 8,500€ ce mois</div>
+                    </div>
+                    <div class="card stat-card">
+                        <div class="stat-label">Tâches en Attente</div>
+                        <div class="stat-value">7</div>
+                        <div class="stat-change">⚠️ 2 urgentes</div>
+                    </div>
+                </div>
+
+                <div class="card">
+                    <h2 class="section-title">Dossiers par Statut</h2>
+                    <div style="margin-bottom: 15px;">
+                        <div style="display: flex; justify-content: space-between; margin-bottom: 8px;">
+                            <span>En cours</span>
+                            <span style="font-weight: 700;">8</span>
+                        </div>
+                        <div style="height: 8px; background: var(--bg-light); border-radius: 4px; overflow: hidden;">
+                            <div style="height: 100%; background: var(--warning); width: 66%;"></div>
+                        </div>
+                    </div>
+                    <div style="margin-bottom: 15px;">
+                        <div style="display: flex; justify-content: space-between; margin-bottom: 8px;">
+                            <span>Clôturés</span>
+                            <span style="font-weight: 700;">28</span>
+                        </div>
+                        <div style="height: 8px; background: var(--bg-light); border-radius: 4px; overflow: hidden;">
+                            <div style="height: 100%; background: var(--success); width: 100%;"></div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- DOSSIERS -->
+            <section class="content" id="dossiers">
+                <div class="header">
+                    <div>
+                        <h1>Mes Dossiers</h1>
+                        <p class="subtitle">Gérez tous vos dossiers clients</p>
+                    </div>
+                    <button class="btn btn-primary">+ Nouveau Dossier</button>
+                </div>
+
+                <div class="grid">
+                    <div class="card">
+                        <h3 style="margin-bottom: 12px;">Vincent Martin</h3>
+                        <p style="font-size: 12px; color: var(--text-light); margin-bottom: 12px;">DOS-2024-001 • Dommages Corporels</p>
+                        <div style="padding-top: 12px; border-top: 1px solid var(--border);">
+                            <div style="display: flex; justify-content: space-between; margin-bottom: 8px; font-size: 14px;">
+                                <span style="color: var(--text-light);">État</span>
+                                <span style="font-weight: 600;">Négociation</span>
+                            </div>
+                            <span class="badge badge-warning">En cours</span>
+                        </div>
+                    </div>
+
+                    <div class="card">
+                        <h3 style="margin-bottom: 12px;">Jean Dupont</h3>
+                        <p style="font-size: 12px; color: var(--text-light); margin-bottom: 12px;">DOS-2024-002 • Affaires Familiales</p>
+                        <div style="padding-top: 12px; border-top: 1px solid var(--border);">
+                            <div style="display: flex; justify-content: space-between; margin-bottom: 8px; font-size: 14px;">
+                                <span style="color: var(--text-light);">État</span>
+                                <span style="font-weight: 600;">Enquête</span>
+                            </div>
+                            <span class="badge badge-warning">En cours</span>
+                        </div>
+                    </div>
+
+                    <div class="card">
+                        <h3 style="margin-bottom: 12px;">Marie Lefebvre</h3>
+                        <p style="font-size: 12px; color: var(--text-light); margin-bottom: 12px;">DOS-2023-045 • Droit Infirmier</p>
+                        <div style="padding-top: 12px; border-top: 1px solid var(--border);">
+                            <div style="display: flex; justify-content: space-between; margin-bottom: 8px; font-size: 14px;">
+                                <span style="color: var(--text-light);">État</span>
+                                <span style="font-weight: 600;">Clôturé</span>
+                            </div>
+                            <span class="badge badge-success">Clôturé</span>
+                        </div>
+                    </div>
+
+                    <div class="card">
+                        <h3 style="margin-bottom: 12px;">Sophie Dubois</h3>
+                        <p style="font-size: 12px; color: var(--text-light); margin-bottom: 12px;">DOS-2024-003 • Droit Contractuel</p>
+                        <div style="padding-top: 12px; border-top: 1px solid var(--border);">
+                            <div style="display: flex; justify-content: space-between; margin-bottom: 8px; font-size: 14px;">
+                                <span style="color: var(--text-light);">Délai</span>
+                                <span style="font-weight: 600; color: var(--danger);">8 jours</span>
+                            </div>
+                            <span class="badge badge-danger">⚠️ Urgent</span>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- TÂCHES -->
+            <section class="content" id="taches">
+                <div class="header">
+                    <div>
+                        <h1>Tâches</h1>
+                        <p class="subtitle">Gerez vos tâches et suivis</p>
+                    </div>
+                    <button class="btn btn-primary">+ Nouvelle Tâche</button>
+                </div>
+
+                <h3 class="section-title">🔴 Urgent (2)</h3>
+                <div style="margin-bottom: 30px;">
+                    <div style="background: white; padding: 16px; border-radius: 8px; border-left: 4px solid var(--danger); margin-bottom: 10px;">
+                        <div style="font-weight: 600; color: var(--primary); margin-bottom: 4px;">Jugement DOS-2024-003 dans 8 jours</div>
+                        <div style="font-size: 12px; color: var(--text-light);">Sophie Dubois - Préparer mémoire</div>
+                    </div>
+                    <div style="background: white; padding: 16px; border-radius: 8px; border-left: 4px solid var(--danger);">
+                        <div style="font-weight: 600; color: var(--primary); margin-bottom: 4px;">Relancer assureur DOS-2024-001</div>
+                        <div style="font-size: 12px; color: var(--text-light);">Vincent Martin - Suivi négociation</div>
+                    </div>
+                </div>
+
+                <h3 class="section-title">🟡 Cette Semaine (4)</h3>
+                <div style="background: white; padding: 16px; border-radius: 8px; border-left: 4px solid var(--warning); margin-bottom: 10px;">
+                    <div style="font-weight: 600; color: var(--primary); margin-bottom: 4px;">Envoyer documents à signer</div>
+                    <div style="font-size: 12px; color: var(--text-light);">Jean Dupont - DOS-2024-002</div>
+                </div>
+            </section>
+
+            <!-- FACTURATION -->
+            <section class="content" id="facturation">
+                <div class="header">
+                    <div>
+                        <h1>Facturation</h1>
+                        <p class="subtitle">Gerez vos factures et revenus</p>
+                    </div>
+                    <button class="btn btn-primary">+ Nouvelle Facture</button>
+                </div>
+
+                <div class="grid">
+                    <div class="card stat-card">
+                        <div class="stat-label">Total Généré</div>
+                        <div class="stat-value">45,200€</div>
+                    </div>
+                    <div class="card stat-card">
+                        <div class="stat-label">En Attente</div>
+                        <div class="stat-value">12,500€</div>
+                        <div class="stat-change">3 factures en retard</div>
+                    </div>
+                    <div class="card stat-card">
+                        <div class="stat-label">Payé</div>
+                        <div class="stat-value">32,700€</div>
+                        <div class="stat-change">✓ 72% collecté</div>
+                    </div>
+                </div>
+
+                <h3 class="section-title">Facturation Récente</h3>
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Dossier</th>
+                            <th>Client</th>
+                            <th>Montant</th>
+                            <th>Statut</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>DOS-2024-001</td>
+                            <td>Vincent Martin</td>
+                            <td>2,500€</td>
+                            <td><span class="badge badge-warning">En attente</span></td>
+                        </tr>
+                        <tr>
+                            <td>DOS-2024-002</td>
+                            <td>Jean Dupont</td>
+                            <td>1,800€</td>
+                            <td><span class="badge badge-success">Payé</span></td>
+                        </tr>
+                        <tr>
+                            <td>DOS-2023-045</td>
+                            <td>Marie Lefebvre</td>
+                            <td>3,200€</td>
+                            <td><span class="badge badge-success">Payé</span></td>
+                        </tr>
+                    </tbody>
+                </table>
+            </section>
+
+            <!-- CLIENTS -->
+            <section class="content" id="clients">
+                <div class="header">
+                    <div>
+                        <h1>Mes Clients</h1>
+                        <p class="subtitle">Gerez vos clients et informations</p>
+                    </div>
+                    <button class="btn btn-primary">+ Nouveau Client</button>
+                </div>
+
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Nom</th>
+                            <th>Dossiers Actifs</th>
+                            <th>Revenus Générés</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td><strong>Vincent Martin</strong></td>
+                            <td>1</td>
+                            <td>2,500€</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Jean Dupont</strong></td>
+                            <td>1</td>
+                            <td>1,800€</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Marie Lefebvre</strong></td>
+                            <td>0</td>
+                            <td>3,200€</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Sophie Dubois</strong></td>
+                            <td>1</td>
+                            <td>5,000€</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </section>
+
+            <!-- PARAMÈTRES -->
+            <section class="content" id="param">
+                <div class="header">
+                    <div>
+                        <h1>Paramètres</h1>
+                        <p class="subtitle">Configurez votre cabinet</p>
+                    </div>
+                </div>
+
+                <div class="grid">
+                    <div class="card">
+                        <h3 class="section-title">👤 Profil</h3>
+                        <div style="margin-bottom: 15px;">
+                            <label style="font-size: 12px; font-weight: 700; margin-bottom: 5px; display: block;">Nom</label>
+                            <input type="text" value="Cabinet Juridique" style="width: 100%; padding: 10px; border: 1px solid var(--border); border-radius: 5px;">
+                        </div>
+                        <div>
+                            <label style="font-size: 12px; font-weight: 700; margin-bottom: 5px; display: block;">Email</label>
+                            <input type="email" value="contact@cabinet.fr" style="width: 100%; padding: 10px; border: 1px solid var(--border); border-radius: 5px;">
+                        </div>
+                    </div>
+
+                    <div class="card">
+                        <h3 class="section-title">🔐 Sécurité</h3>
+                        <div style="margin-bottom: 15px; padding: 12px; background: var(--bg-light); border-radius: 6px;">
+                            <div style="font-size: 12px; color: var(--text-light); margin-bottom: 5px;">2FA Status</div>
+                            <div style="font-weight: 600; color: var(--success);">✓ Activée</div>
+                        </div>
+                        <button class="btn" style="width: 100%; background: white; color: var(--text-dark); border: 1px solid var(--border);">Changer Mot de Passe</button>
+                    </div>
+                </div>
+            </section>
+        </main>
+    </div>
+
+    <script>
+        // Navigation
+        document.querySelectorAll('[data-section]').forEach(link => {
+            link.addEventListener('click', (e) => {
+                const section = e.target.dataset.section;
+                document.querySelectorAll('.content').forEach(s => s.classList.remove('active'));
+                document.querySelectorAll('[data-section]').forEach(l => l.classList.remove('active'));
+                document.getElementById(section).classList.add('active');
+                e.target.classList.add('active');
+            });
+        });
+
+        // View switching
+        document.querySelectorAll('[data-view]').forEach(btn => {
+            btn.addEventListener('click', (e) => {
+                const view = e.target.dataset.view;
+                const config = {
+                    sarah: { role: 'Admin', name: 'Cabinet Juridique' },
+                    secretary: { role: 'Secrétaire', name: 'Marie Dubois' },
+                    client: { role: 'Client', name: 'Vincent Martin' }
+                };
+
+                document.getElementById('roleDisplay').textContent = config[view].role;
+                document.getElementById('nameDisplay').textContent = config[view].name;
+
+                if (view === 'client') {
+                    document.querySelector('.nav-list').style.display = 'none';
+                    document.querySelector('.main').innerHTML = `
+                        <div class="header">
+                            <div>
+                                <h1>Votre Dossier</h1>
+                                <p class="subtitle">DOS-2024-001 • Dommages Corporels</p>
+                            </div>
+                        </div>
+                        <div class="card" style="max-width: 700px;">
+                            <div style="background: var(--accent); color: var(--primary); padding: 20px; border-radius: 8px; margin-bottom: 30px; text-align: center;">
+                                <div style="font-size: 14px;">Statut actuel</div>
+                                <div style="font-size: 24px; font-weight: 700; margin-top: 5px;">💬 Négociation en cours</div>
+                            </div>
+
+                            <h2 class="section-title">📈 Progression</h2>
+                            <div style="margin-bottom: 30px;">
+                                <div style="margin-bottom: 15px;">
+                                    <div style="font-weight: 600; margin-bottom: 5px;">15 janvier 2024 - Dossier ouvert</div>
+                                    <div style="font-size: 12px; color: var(--text-light);">Cabinet Juridique a reçu votre demande</div>
+                                </div>
+                                <div style="margin-bottom: 15px;">
+                                    <div style="font-weight: 600; margin-bottom: 5px;">18 janvier 2024 - Expertise demandée</div>
+                                    <div style="font-size: 12px; color: var(--text-light);">Un courrier a été envoyé pour organiser votre examen</div>
+                                </div>
+                                <div style="margin-bottom: 15px;">
+                                    <div style="font-weight: 600; margin-bottom: 5px;">10 février 2024 - Expertise reçue</div>
+                                    <div style="font-size: 12px; color: var(--text-light);">Le rapport a été reçu et analysé</div>
+                                </div>
+                                <div>
+                                    <div style="font-weight: 600; margin-bottom: 5px;">22 février 2024 - Négociation en cours</div>
+                                    <div style="font-size: 12px; color: var(--text-light);">Cabinet Juridique négocie le meilleur accord</div>
+                                </div>
+                            </div>
+
+                            <h2 class="section-title">✅ Ce que vous devez faire</h2>
+                            <div style="margin-bottom: 30px;">
+                                <div style="display: flex; align-items: center; gap: 10px; margin-bottom: 10px;">
+                                    <input type="checkbox" checked>
+                                    <span style="font-size: 14px; text-decoration: line-through; color: var(--text-light);">Envoyer documents médicaux</span>
+                                </div>
+                                <div style="display: flex; align-items: center; gap: 10px;">
+                                    <input type="checkbox">
+                                    <span style="font-size: 14px;">Valider l'accord trouvé</span>
+                                </div>
+                            </div>
+
+                            <div style="background: #f0f7ff; padding: 15px; border-radius: 6px; border-left: 4px solid #3498db;">
+                                <strong>ℹ️ Confidentialité</strong><br>
+                                <span style="font-size: 12px;">Vous avez accès uniquement à votre dossier. Vos données sont chiffrées et sécurisées.</span>
+                            </div>
+                        </div>
+                    `;
+                } else {
+                    location.reload();
+                }
+
+                document.querySelectorAll('[data-view]').forEach(b => b.classList.remove('active'));
+                e.target.classList.add('active');
+            });
+        });
+    </script>
+</body>
+</html>
